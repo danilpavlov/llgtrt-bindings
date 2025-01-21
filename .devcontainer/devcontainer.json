@@ -1,0 +1,18 @@
+{
+    "name": "llgtrt-bindings",
+    "image": "nvcr.io/nvidia/tensorrt:24.12-py3",
+    "mounts": [
+        "source=./TensorRT-LLM,target=/workspaces/TensorRT-LLM,type=bind"
+    ],
+    "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash"
+    },
+    "extensions": [
+        "ms-vscode.cpptools",
+        "ms-python.python",
+        "github.copilot",
+        "ms-vscode.cmake-tools"
+    ],
+    "postCreateCommand": "echo 'Container setup complete!'",
+    "runArgs": ["--gpus", "all"]
+}

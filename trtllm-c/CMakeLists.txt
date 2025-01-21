@@ -3,8 +3,7 @@ cmake_minimum_required(VERSION 3.1)
 set(CMAKE_CUDA_ARCHITECTURES 70-real 80-real 86-real 89-real 90-real)
 enable_language(CUDA)
 
-# set(TRTLLM_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../TensorRT-LLM")
-set(TRTLLM_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../tensorrt_llm")
+set(TRTLLM_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../TensorRT-LLM")
 
 set(TRTLLM_INCLUDE_DIR "${TRTLLM_DIR}/cpp/include")
 set(TRTLLM_INCLUDE_COMMON_DIR "${TRTLLM_DIR}/cpp")
