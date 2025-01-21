@@ -4,7 +4,50 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include "tensorrt_llm/executor/executor.h"
+#include "tensorrt_llm/plugins/api/tllmPlugin.h"
 
+// C++ structures defined before extern "C" block
+#ifdef __cplusplus
+
+namespace tle = tensorrt_llm::executor;
+
+// TODO: Я хз почему он не видит в python_bindings/bindings.cpp некоторые структуры
+
+typedef uint64_t TlcReqId;
+typedef uint64_t TlcClientId;
+typedef char* TlcStatus;
+
+struct ResponseData {
+    std::string error;
+    tensorrt_llm::executor::VecTokens tokens;
+    tensorrt_llm::executor::VecLogProbs logprobs;
+};
+
+struct TlcExecutor {
+    tensorrt_llm::executor::Executor executor;
+    bool has_logits_post_processor;
+    std::vector<TlcResponse> responses;
+    std::vector<ResponseData> responses_data;
+};
+
+struct TlcResponse{
+    TlcReqId req_id;
+    uint32_t sequence_idx; // when num_return_sequences > 1
+    bool is_seq_final;
+    bool is_req_final;
+    TlcFinishReason finish_reason;
+
+    char const* error;
+
+    // these are only output tokens
+    uint32_t num_tokens;
+    int32_t const* tokens;
+    uint32_t num_logprobs;
+    float const* logprobs;
+};
+
+#endif // __cplusplus
 
 #ifdef __cplusplus
 extern "C"
@@ -131,24 +174,22 @@ extern "C"
         FINISH_REASON_LENGTH = 3,
     } TlcFinishReason;
 
-    typedef struct
-    {
-        TlcReqId req_id;
-        uint32_t sequence_idx; // when num_return_sequences > 1
-        bool is_seq_final;
-        bool is_req_final;
-        TlcFinishReason finish_reason;
 
-        char const* error;
+    // struct ResponseData
+    // {
+    //     std::string error;
+    //     tle::VecTokens tokens;
+    //     tle::VecLogProbs logprobs;
+    // };
 
-        // these are only output tokens
-        uint32_t num_tokens;
-        int32_t const* tokens;
-        uint32_t num_logprobs;
-        float const* logprobs;
-    } TlcResponse;
-
-    typedef struct TlcExecutor TlcExecutor;
+    // struct TlcExecutor
+    // {
+    //     tle::Executor executor;
+    //     bool has_logits_post_processor;
+    //     std::vector<TlcResponse> responses;
+    //     // this is the same size as responses, and is used to keep pointers in responses alive
+    //     std::vector<ResponseData> responses_data;
+    // };
 
     void tlc_default_init_params(TlcInitParams* params);
     TlcStatus tlc_init(TlcInitParams const* params, TlcExecutor** res);
