@@ -1,6 +1,9 @@
 {
     "name": "llgtrt-bindings",
-    "image": "nvcr.io/nvidia/tensorrt:24.12-py3",
+    "build": {
+        "context": "..",
+        "dockerfile": "Dockerfile"
+    },
     "mounts": [
         "source=./TensorRT-LLM,target=/workspaces/TensorRT-LLM,type=bind"
     ],
@@ -14,5 +17,5 @@
         "ms-vscode.cmake-tools"
     ],
     "postCreateCommand": "echo 'Container setup complete!'",
-    "runArgs": ["--gpus", "all"]
+    "runArgs": ["--gpus", "all", "--shm-size", "8g", "--runtime", "nvidia"]
 }
